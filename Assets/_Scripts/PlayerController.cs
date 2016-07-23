@@ -2,13 +2,13 @@
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
-
-
 public class PlayerController : MonoBehaviour {
 
 	public Text timeMessage;
 	public Text pickupsLeft;
 
+	public AudioClip audioMalandramente;
+	public AudioClip audioAiSafada;
 
 	public float timeSinceReset;
 	public float speed;
@@ -68,11 +68,14 @@ public class PlayerController : MonoBehaviour {
 		if (other.gameObject.CompareTag ("Pickup")) {
 
 			other.gameObject.SetActive (false);
+			AudioSource.PlayClipAtPoint (audioMalandramente, transform.position);
 
 			RecalculatePickups (); 
 			
 		} else if (other.gameObject.CompareTag ("Enemy")) {
-			RestartGame ();
+			gameObject.SetActive (false);
+			AudioSource.PlayClipAtPoint (audioAiSafada, transform.position);
+			//RestartGame ();
 		}
 	}
 
@@ -84,7 +87,7 @@ public class PlayerController : MonoBehaviour {
 
 			timeMessage.text = "Tempo: " + minutes + ":" + seconds;
 		} else {
-			timeMessage.text = "Você coletou tudo em: " + minutes + ":" + seconds;
+			timeMessage.text = "Você malandrou tudo em: " + minutes + ":" + seconds;
 		}
 
 	}
@@ -111,6 +114,9 @@ public class PlayerController : MonoBehaviour {
 
 	float getCurrentTime() {
 		return Time.realtimeSinceStartup - timeSinceReset;
+	}
+
+	void PlayMusic(){
 	}
 
 }
