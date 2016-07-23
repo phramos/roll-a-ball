@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using UnityEngine.SceneManagement;
+
 public class PlayerController : MonoBehaviour {
 
 	public Text timeMessage;
@@ -25,32 +25,25 @@ public class PlayerController : MonoBehaviour {
 	void Awake () {
 		
 		player = GetComponent<Rigidbody> ();
+
 		totalPickups = 25;
 
 		_isPlayerWon = false;
 		_isGameInProgres = true;
 
-		pickupsLeft.text = "Items restantes: " + totalPickups.ToString();
+		pickupsLeft.text = "Malandragens restantes: " + totalPickups.ToString();
 	
 	}
-
-
-	void Start() {
 		
-		RecalculateTime ();
-
-	}
 
 	void Update () {
 		
 		if (_isGameInProgres) {
 			RecalculateTime (); 
 		}
-
-		if (!_isGameInProgres && Input.GetKey(KeyCode.R)){
-			RestartGame ();
-		}
 	}
+
+		
 
 	void FixedUpdate() {
 		
@@ -60,6 +53,8 @@ public class PlayerController : MonoBehaviour {
 		Vector3 moviment = new Vector3 (moveHorizontal, 0, moveVertical);
 
 		player.AddForce (moviment * speed);
+
+		transform.Translate (Input.acceleration.x, 0, -Input.acceleration.z);
 
 	}
 
@@ -73,9 +68,9 @@ public class PlayerController : MonoBehaviour {
 			RecalculatePickups (); 
 			
 		} else if (other.gameObject.CompareTag ("Enemy")) {
-			gameObject.SetActive (false);
+			//gameObject.SetActive (false);
 			AudioSource.PlayClipAtPoint (audioAiSafada, transform.position);
-			//RestartGame ();
+			PlayerPerdeu ();
 		}
 	}
 
@@ -86,8 +81,6 @@ public class PlayerController : MonoBehaviour {
 			seconds = ((Time.timeSinceLevelLoad) % 60).ToString ("00");
 
 			timeMessage.text = "Tempo: " + minutes + ":" + seconds;
-		} else {
-			timeMessage.text = "Você malandrou tudo em: " + minutes + ":" + seconds;
 		}
 
 	}
@@ -96,27 +89,41 @@ public class PlayerController : MonoBehaviour {
 		if (_isGameInProgres) {
 			totalPickups--;
 			speed++;
-			pickupsLeft.text = "Itens estantes: " + totalPickups.ToString ();
+			pickupsLeft.text = "Maladragens  restantes: " + totalPickups.ToString ();
 			if (totalPickups == 0) {
-
-				_isGameInProgres = !_isGameInProgres;
-				_isPlayerWon = true;
-
+				PlayerVenceu ();
 			}
 		} 
 			
 	}
 
-	void RestartGame() {
-		timeSinceReset = Time.realtimeSinceStartup;
-		SceneManager.LoadScene (0);
-	}
+
 
 	float getCurrentTime() {
 		return Time.realtimeSinceStartup - timeSinceReset;
 	}
 
-	void PlayMusic(){
+	void PlayerVenceu(){
+		gameObject.SetActive(false);
+		_isGameInProgres = false;
+		_isPlayerWon = true;
+		UpdateUI ();
 	}
 
+
+	void PlayerPerdeu(){
+		gameObject.SetActive(false);
+		_isGameInProgres = false;
+		_isPlayerWon = false;
+		UpdateUI ();
+	}
+
+	void UpdateUI() {
+		timeMessage.text = "Aperte R para jogar novamente";
+		if (_isPlayerWon) {
+			pickupsLeft.text = "Parabéns, a menina levou madeirada em " + minutes + " minutos " + seconds + " segundos";
+		} else {
+			pickupsLeft.text = "Nois se vê por aíi!";
+		}
+	}
 }
