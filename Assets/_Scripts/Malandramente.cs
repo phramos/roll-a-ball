@@ -4,7 +4,7 @@ using System.Collections;
 public class Malandramente : MonoBehaviour {
 
 	public AudioClip audioMalandramente;
-	
+    
 	void Awake () {
 		audioMalandramente= GetComponent<AudioClip>();
 	}

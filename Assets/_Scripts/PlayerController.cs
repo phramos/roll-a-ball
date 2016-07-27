@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour {
 
 	public Text timeMessage;
 	public Text pickupsLeft;
+    public Text help;
 
 	public AudioClip audioMalandramente;
 	public AudioClip audioAiSafada;
@@ -22,6 +23,9 @@ public class PlayerController : MonoBehaviour {
 	private bool _isPlayerWon;
 	private bool _isGameInProgres;
 
+    public GameObject camSuperior;
+    public GameObject cam3aPessoa;
+
 	void Awake () {
 		
 		player = GetComponent<Rigidbody> ();
@@ -32,7 +36,11 @@ public class PlayerController : MonoBehaviour {
 		_isGameInProgres = true;
 
 		pickupsLeft.text = "Malandragens restantes: " + totalPickups.ToString();
-	
+        help.text = "Ajuda (H)";
+
+        camSuperior.active = false;
+        cam3aPessoa.active = true;
+        
 	}
 		
 
@@ -41,11 +49,43 @@ public class PlayerController : MonoBehaviour {
 		if (_isGameInProgres) {
 			RecalculateTime (); 
 		}
-	}
 
-		
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            toggleCamera();
 
-	void FixedUpdate() {
+        }
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            toggleAjuda();
+
+        }
+    }
+
+    void toggleCamera()
+    {
+
+        cam3aPessoa.active = !cam3aPessoa.active;
+        camSuperior.active = !camSuperior.active;
+    }
+
+    void toggleAjuda()
+    {
+
+        if (help.text.Equals("Ajuda (H)"))
+        {
+
+            help.text = "Comandos:\nMovimentar (Setas)\nReiniciar (R)\nMudar Camera (C)\nAlternar Dia/Noite (N)\nAproximar (-)\nAfastar (+)\nRedefinir Zoom(*)\nFechar Ajuda(H)";
+        }
+        else
+        {
+
+            help.text = "Ajuda (H)";
+        }
+    }
+
+    void FixedUpdate() {
 		
 		float moveHorizontal = Input.GetAxis ("Horizontal"); 
 		float moveVertical = Input.GetAxis ("Vertical"); 
