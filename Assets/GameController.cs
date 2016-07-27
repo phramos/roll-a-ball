@@ -13,8 +13,12 @@ public class GameController : MonoBehaviour {
 
 				RestartGame ();
 			}
+            if (Input.GetKey(KeyCode.Escape))
+            {
+            SceneManager.LoadScene("Menu");
+            }
 
-			int nbTouches = Input.touchCount;
+        int nbTouches = Input.touchCount;
 
 			if(nbTouches > 0){
 				for (int i = 0; i < nbTouches; i++) {

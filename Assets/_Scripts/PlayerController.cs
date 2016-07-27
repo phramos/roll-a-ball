@@ -159,7 +159,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void UpdateUI() {
-		timeMessage.text = "Aperte R para jogar novamente";
+		timeMessage.text = "Aperte R para jogar novamente ou Esc pra voltar ao menu";
 		if (_isPlayerWon) {
 			pickupsLeft.text = "Parabéns, a menina levou madeirada em " + minutes + " minutos " + seconds + " segundos";
 		} else {
